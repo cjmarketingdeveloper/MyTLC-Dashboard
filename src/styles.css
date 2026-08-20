@@ -1,0 +1,29 @@
+/* You can add global styles to this file, and also import other style files */
+@import "@fontsource/work-sans";
+@import 'tailwindcss';
+
+:root{
+
+    --primary:#FF8200;
+    --accent:#007179;
+    --gray-light:#d9d9d8;
+    --gray-dark:#75777B;
+    --black:#231F20;
+
+}
+@theme {
+  --color-primary: #FF8200;
+  --color-accent: #007179;
+  --color-gray-light: #C8C8C7;
+  --color-gray-dark: #75777B;
+  --color-brand-black: #231F20;
+}
+body {
+    font-family: "Work Sans", sans-serif;
+}
+button{
+  cursor: pointer;
+}
+td {
+    font-size: 14px;
+}

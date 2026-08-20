@@ -1,0 +1,79 @@
+<div class="min-h-screen bg-white">
+    <div class="grid min-h-screen lg:grid-cols-2">
+        <!-- LEFT SIDE -->
+        <div class="flex flex-col justify-between px-8 py-10 lg:px-20">
+            <div class="mx-auto flex login-h-screen w-full max-w-md flex-col justify-center py-12">
+                <!-- Mobile Illustration -->
+                <div class="mb-10 flex justify-center lg:hidden">
+                    <img
+                        src="images/login-vector.png"
+                        alt="Login"
+                        class="w-32">
+                </div>
+
+                <div class="mb-10">
+                    <h1 class="text-4xl font-bold text-[#231F20]">
+                        Welcome Back
+                    </h1>
+                    <p class="mt-3 text-[#75777B]">
+                        Sign in to continue to your dashboard.
+                    </p>
+                </div>
+
+                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+                    <div>
+                        <label class="mb-2 block text-sm font-medium">
+                            Email Address
+                        </label>
+                        <input
+                            formControlName="email"
+                            type="email"
+                            placeholder="john@email.com"
+                            class="w-full rounded-lg border border-[#C8C8C7] px-4 py-3 outline-none transition focus:border-[#007179]" />
+                    </div>
+                    <div>
+                        <div class="mb-2 flex justify-between">
+                            <label class="text-sm font-medium">
+                                Password
+                            </label>
+                            <a
+                                routerLink="/forgot-password"
+                                class="text-sm text-[#007179] hover:underline">
+                                Forgot Password?
+                            </a>
+                        </div>
+
+                        <input
+                            formControlName="password"
+                            type="password"
+                            placeholder="Password"
+                            class="w-full rounded-lg border border-[#C8C8C7] px-4 py-3 outline-none transition focus:border-[#007179]" />
+                    </div>
+
+                    <button
+                        type="submit" [disabled]="loginForm.invalid || isProcessing"
+                        class="w-full rounded-lg bg-[#FF8200] py-3 font-semibold text-white transition hover:opacity-90">
+                        <span *ngIf="isProcessing" class="mr-2 inline-block h-5 w-5 animate-spin rounded-full border-b-2 border-white"></span>
+                        <span>{{ isProcessing ? 'Signing In..' : 'Sign in'}}</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Logo -->
+            <div class="mt-16 flex justify-center lg:justify-start">
+                <img
+                    src="images/logo.png"
+                    class="h-12"
+                    alt="Logo">
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT SIDE -->
+   
+        <div class="hidden lg:block h-screen w-full bg-cover bg-center bg-no-repeat"
+            style="background-image: url('images/login-back.jpg');">
+        </div>
+    </div>
+</div>

@@ -1,0 +1,171 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+    <div
+    class="w-full max-w-4xl rounded-3xl bg-white shadow-2xl">
+        <!-- Header -->
+        <div
+            class="flex items-center justify-between border-b p-6">
+            <h2
+            class="text-2xl font-semibold">
+                Create Documents
+            </h2>
+
+            <button
+            (click)="closeModal()"
+            class="text-3xl">
+                ×
+            </button>
+        </div>
+        <!-- Body -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-6">
+      
+      <!-- Drag and Drop Dropzone -->
+      <div
+        *ngIf="documents.length < MAX_FILES"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        (drop)="onDrop($event)"
+        [ngClass]="{ 'border-blue-500 bg-blue-50': isDragging, 'border-gray-300 bg-gray-50': !isDragging }"
+        class="relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed p-8 text-center transition-colors cursor-pointer hover:bg-gray-100"
+      >
+        <input
+          type="file"
+          multiple
+          accept=".pdf,.doc,.docx,.gdoc,.xls,.xlsx,.gsheet,.ppt,.pptx,.gslides,.gform,.csv,application/pdf,text/csv"
+          (change)="onFileSelected($event)"
+          class="absolute inset-0 cursor-pointer opacity-0"
+        />
+        <svg class="mb-3 h-10 w-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+        </svg>
+        <p class="text-base font-medium text-gray-700">
+          Drag & drop your files here, or <span class="text-blue-600 underline">browse</span>
+        </p>
+        <p class="text-xs text-gray-400 mt-1">Remaining slots: {{ MAX_FILES - documents.length }}</p>
+      </div>
+
+      <!-- File List (1 to 10) -->
+      <div *ngIf="documents.length > 0" class="space-y-4 special-list-scroll">
+        <div
+          *ngFor="let doc of documents; let i = index"
+          [ngClass]="{ 'opacity-60 bg-gray-50': !doc.title.trim() && !doc.isUploaded }"
+          class="flex flex-col gap-3 rounded-2xl bg-white border border-gray-300 p-4 shadow-sm transition-all md:flex-row md:items-center"
+        >
+          <!-- Number badge & details -->
+          <div class="flex items-center gap-3 md:w-1/4">
+            <span class="flex h-7 w-7 items-center justify-center rounded-full bg-gray-200 text-xs font-bold text-gray-700">
+              {{ i + 1 }}
+            </span>
+            <div class="truncate">
+              <p class="truncate text-sm font-semibold text-gray-800" [title]="doc.file.name">
+                {{ doc.file.name }}
+              </p>
+              <div class="flex gap-2 text-xs text-gray-500">
+                <span class="uppercase font-medium text-blue-600">{{ doc.type }}</span>
+                <span>•</span>
+                <span>{{ doc.sizeFormatted }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Editable Fields -->
+          <div class="grid flex-1 grid-cols-1 gap-2 sm:grid-cols-3">
+            <div>
+              <input
+                type="text"
+                [(ngModel)]="doc.title"
+                [disabled]="doc.isUploading || doc.isUploaded"
+                placeholder="Title (Required)"
+                class="w-full rounded-xl border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+              />
+              <span *ngIf="!doc.title.trim()" class="text-[10px] text-red-500">Title required to upload</span>
+            </div>
+            <input
+              type="text"
+              [(ngModel)]="doc.category"
+              [disabled]="doc.isUploading || doc.isUploaded"
+              placeholder="Category (Optional)"
+              class="w-full rounded-xl border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+            />
+            <input
+              type="text"
+              [(ngModel)]="doc.description"
+              [disabled]="doc.isUploading || doc.isUploaded"
+              placeholder="Description (Optional)"
+              class="w-full rounded-xl border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+            />
+          </div>
+
+          <!-- Actions & Status -->
+          <div class="flex items-center justify-end gap-2 md:w-auto">
+            
+            <!-- Uploading Indicator -->
+            <div *ngIf="doc.isUploading" class="flex items-center gap-2 px-3 py-1.5 text-xs text-blue-600">
+              <svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+              </svg>
+              <span>Uploading...</span>
+            </div>
+
+            <!-- Single Upload Button -->
+            <button
+              *ngIf="!doc.isUploading && !doc.isUploaded"
+              (click)="uploadSingle(doc)"
+              [disabled]="!doc.title.trim() || isBatchUploading"
+              class="rounded-xl bg-[#007179] px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-[#FF8200] disabled:cursor-not-allowed disabled:bg-gray-300"
+            >
+              Upload
+            </button>
+
+            <!-- Copy URL Action on Success -->
+            <button
+              *ngIf="doc.isUploaded"
+              (click)="copyToClipboard(doc.uploadedUrl)"
+              title="Copy URL"
+              class="flex items-center gap-1 rounded-xl bg-green-50 px-3 py-1.5 text-xs font-medium text-green-700 border border-green-200 hover:bg-green-100"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+              </svg>
+              <span>Copy Link</span>
+            </button>
+
+            <!-- Delete Row Button -->
+            <button
+              *ngIf="!doc.isUploading"
+              (click)="removeDocument(i)"
+              class="p-1 text-gray-400 hover:text-red-500"
+            >
+              &times;
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="flex items-center justify-between border-t p-6">
+      <span class="text-xs text-gray-500">
+        {{ documents.length }} / {{ MAX_FILES }} files ready
+      </span>
+      <div class="flex gap-3">
+        <button
+          (click)="closeModal()"
+          class="rounded-2xl border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+        >
+          Close
+        </button>
+        <button
+          *ngIf="documents.length > 0"
+          (click)="uploadAll()"
+          [disabled]="isBatchUploading"
+          class="rounded-2xl bg-[#FF8200] px-6 py-2.5 text-sm font-semibold text-white shadow hover:bg-[#007179] disabled:opacity-50"
+        >
+          {{ isBatchUploading ? 'Uploading All...' : 'Upload All' }}
+        </button>
+      </div>
+    </div>
+
+    </div>
+</div>

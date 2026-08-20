@@ -1,0 +1,168 @@
+<div *ngIf="product() as p" class="space-y-8">
+    <!-- Header -->
+    <div class="flex flex-col gap-6 rounded-2xl bg-white p-6 shadow-sm lg:flex-row lg:items-start lg:justify-between">
+        <!-- Product Information -->
+        <div class="flex-1 overflow-x-auto">
+            <table class="w-full text-sm">
+                <tbody>
+                    <tr class="border-b">
+                        <td class="w-52 py-3 font-semibold text-[#75777B]">
+                            Product
+                        </td>
+                        <td class="py-3  font-semibold">
+                            {{ p.title }}
+                        </td>
+                    </tr>
+                    <tr class="border-b">
+                        <td class="py-3 font-semibold text-[#75777B]">
+                            Code
+                        </td>
+                        <td class="py-3">
+                            {{ p.code }}
+                        </td>
+                    </tr>
+                    <tr class="border-b">
+                        <td class="py-3 font-semibold text-[#75777B]">
+                            Company
+                        </td>
+                        <td class="py-3">
+                            {{ p.companyName }}
+                        </td>
+                    </tr>
+                    <tr class="border-b">
+                        <td class="py-3 font-semibold text-[#75777B]">
+                            Category
+                        </td>
+                        <td class="py-3">
+                            {{ p.categoryName }}
+                        </td>
+                    </tr>
+                    <tr class="border-b">
+                        <td class="py-3 font-semibold text-[#75777B]">
+                            Type
+                        </td>
+                        <td class="py-3">
+                            {{ p.type }}
+                        </td>
+                    </tr>
+                    <tr class="border-b">
+                        <td class="py-3 font-semibold text-[#75777B]">
+                            Description
+                        </td>
+                        <td class="py-3">
+                            {{ p.description }}
+                        </td>
+                    </tr>
+                    <tr class="border-b">
+                        <td class="py-3 font-semibold text-[#75777B]">
+                            Price
+                        </td>
+                        <td class="py-3">
+                            {{ p.price | currency:'ZAR' }}
+                        </td>
+                    </tr>
+                    <tr class="border-b">
+                        <td class="py-3 font-semibold text-[#75777B]">
+                            Minimum Quantity
+                        </td>
+                        <td class="py-3">
+                            {{ p.min_quantity }}
+                        </td>
+                    </tr>
+                    <tr class="border-b">
+                        <td class="py-3 font-semibold text-[#75777B]">
+                            Stock
+                        </td>
+
+                        <td class="py-3">
+                            {{ p.stock_count }}
+                        </td>
+                    </tr>
+                    <tr class="border-b">
+                        <td class="py-3 font-semibold text-[#75777B]">
+                            Status
+                        </td>
+                        <td class="py-3">
+                            <span
+                                *ngIf="p.is_active"
+                                class="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
+                                Active
+                            </span>
+                            <span
+                                *ngIf="!p.is_active"
+                                class="rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700">
+                                Inactive
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Product Image & Custom Block Container -->
+        <div class="flex w-full flex-col items-center gap-4 lg:w-72">
+            <!-- Product Image Section -->
+            <div class="flex w-full justify-center">
+                <ng-container *ngIf="p.imageUrl; else noImage">
+                    <img
+                        [src]="p.imageUrl"
+                        class="h-64 w-64 rounded-2xl border object-cover">
+                </ng-container>
+                <ng-template #noImage>
+                    <div class="flex h-64 w-64 items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-gray-50 text-gray-400">
+                        No Image
+                    </div>
+                </ng-template>
+            </div>
+
+            <!-- Custom Teal Block -->
+            <div class="flex w-64 com-info">
+                {{p.companyName}}
+            </div>
+
+            <div class="flex w-64 com-info">
+                {{p.categoryName}}
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="mt-8 rounded-2xl bg-white shadow-sm p-6">
+        <h2 class="text-4xl">Update Product</h2>
+        <div class="mt-5 flex gap-8 border-b border-gray-200">
+            
+            <button
+                class="bg-[#007179] text-white rounded-xl px-6 py-3 mb-2"
+                (click)="selectedTab.set('details')">
+                Details
+            </button>          
+
+            <button
+                class="bg-[#007179] text-white rounded-xl px-6 py-3 mb-2"
+                (click)="selectedTab.set('images')">
+                Images
+            </button>
+            <button
+                class="bg-[#007179] text-white rounded-xl px-6 py-3 mb-2"
+                (click)="selectedTab.set('variations')">
+                Variations
+            </button>
+
+        </div>
+
+        <app-product-details
+        *ngIf="selectedTab()=='details'"
+        [product]="product()!">
+        </app-product-details>
+
+        <app-product-variations
+        *ngIf="selectedTab()=='variations'"
+        [product]="product()!">
+        </app-product-variations>
+
+        <app-product-images
+        *ngIf="selectedTab()=='images'"
+        [product]="product()!">
+        </app-product-images>
+    </div>
+</div>

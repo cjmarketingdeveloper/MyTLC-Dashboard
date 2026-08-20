@@ -1,0 +1,128 @@
+<div>
+    <h3 class="text-2xl mt-4">Details</h3>
+    <div class="p-4">
+        <form
+            (ngSubmit)="saveChanges()"
+            class="space-y-8">
+
+            <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                <!-- Title -->
+                <div class="lg:col-span-2">
+                    <label class="mb-2 block font-medium text-[#231F20]">
+                        Product Title
+                    </label>
+
+                    <input
+                        [(ngModel)]="product().title"
+                        name="title"
+                        type="text"
+                        class="w-full rounded-xl border border-[#C8C8C7] p-3 focus:border-[#007179] focus:outline-none">
+
+                </div>
+
+                <!-- Description -->
+
+                <div class="lg:col-span-2">
+                    <label class="mb-2 block font-medium">
+                        Description
+                    </label>
+
+                    <textarea
+                        [(ngModel)]="product().description"
+                        name="description"
+                        rows="5"
+                        class="w-full rounded-xl border border-[#C8C8C7] p-3 focus:border-[#007179] focus:outline-none"></textarea>
+
+                </div>
+
+                <!-- Price -->
+                <div>
+                    <label class="mb-2 block font-medium">
+                        Price
+                    </label>
+                    <input
+                        [(ngModel)]="product().price"
+                        name="price"
+                        type="number"
+                        step="0.01"
+                        class="w-full rounded-xl border border-[#C8C8C7] p-3">
+
+                </div>
+
+                <!-- Minimum Quantity -->
+                <div>
+                    <label class="mb-2 block font-medium">
+                        Minimum Quantity
+                    </label>
+
+                    <input
+                        [(ngModel)]="product().min_quantity"
+                        name="minQuantity"
+                        type="number"
+                        min="1"
+                        class="w-full rounded-xl border border-[#C8C8C7] p-3">
+
+                </div>
+
+                <!-- Stock -->
+                <div>
+                    <label class="mb-2 block font-medium">
+                        Stock Count
+                    </label>
+
+                    <input
+                        [(ngModel)]="product().stock_count"
+                        name="stockCount"
+                        type="number"
+                        min="0"
+                        class="w-full rounded-xl border border-[#C8C8C7] p-3">
+
+                </div>
+
+                <!-- Empty column for spacing -->
+
+                <div></div>
+
+                <!-- Show Stock -->
+                <div>
+                    <label class="flex items-center gap-3">
+                        <input
+                            [(ngModel)]="product().show_stock"
+                            name="showStock"
+                            type="checkbox"
+                            class="h-5 w-5 accent-[#007179]">
+                        <span class="font-medium">
+                            Show Stock
+                        </span>
+                    </label>
+                </div>
+
+                <!-- Active -->
+                <div>
+                    <label class="flex items-center gap-3">
+
+                        <input
+                            [(ngModel)]="product().is_active"
+                            name="isActive"
+                            type="checkbox"
+                            class="h-5 w-5 accent-[#007179]">
+                        <span class="font-medium">
+                            Active Product
+                        </span>
+                    </label>
+                </div>
+
+            </div>
+
+            <div class="flex justify-end border-t pt-6">
+
+                <button
+                    type="submit"
+                    [disabled]="loading"
+                    class="rounded-xl bg-[#FF8200] px-8 py-3 font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50">
+                    {{ loading ? 'Saving...' : 'Save Changes' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

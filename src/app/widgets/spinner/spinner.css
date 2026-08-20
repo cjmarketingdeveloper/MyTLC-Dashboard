@@ -1,0 +1,35 @@
+/* Full-screen backdrop covering everything */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.704); /* Semi-transparent background */
+  backdrop-filter: blur(3px); /* Subtle blur effect for modern UI */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Higher than everything else */
+}
+
+/* Dual-color spinning ring */
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3; /* Light subtle base ring */
+  border-top: 4px solid #FF8200; /* Vibrant Orange */
+  border-right: 4px solid #007179; /* Deep Teal */
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Continuous rotation animation */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

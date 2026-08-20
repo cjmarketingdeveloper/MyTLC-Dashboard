@@ -1,0 +1,161 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+
+    <div
+    class="w-full max-w-4xl rounded-3xl bg-white shadow-2xl">
+        <!-- Header -->
+        <div
+        class="flex items-center justify-between border-b p-6">
+            <h2
+            class="text-2xl font-semibold">
+                Create Product
+            </h2>
+
+            <button
+            (click)="closeModal()"
+            class="text-3xl">
+                ×
+            </button>
+        </div>
+        <!-- Body -->
+        <div
+        class="max-h-[70vh] overflow-y-auto p-6">
+            <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                <!-- Loading State -->
+                @if (isSpinner) {
+                    <div class="col-span-1 flex items-center justify-center space-x-2 rounded-lg border border-slate-200 bg-slate-50 p-6 md:col-span-2">
+                        <svg class="h-5 w-5 animate-spin text-slate-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span class="text-sm font-medium text-slate-600">Loading options...</span>
+                    </div>
+                }@else {
+                    <!-- Company -->
+                    <div>
+                        <label class="mb-2 block font-medium">
+                            Company
+                        </label>
+                        <select
+                            [ngModel]="selectedCompanyId()"
+                            (ngModelChange)="selectedCompanyId.set($event)"
+                            name="companyId"
+                            class="w-full rounded-lg border p-3">
+                            <option [ngValue]="0">Select Company</option>
+                            <option *ngFor="let company of companies" [ngValue]="company.id">
+                                {{ company.name }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Category -->
+                    <div>
+                        <label class="mb-2 block font-medium">
+                            Category
+                        </label>
+                        <select
+                            [ngModel]="selectedCategoryId()"
+                            (ngModelChange)="selectedCategoryId.set($event)"
+                            name="categoryId"
+                            class="w-full rounded-lg border p-3">
+                            <option [ngValue]="0">Select Category</option>
+                            <option *ngFor="let category of categories" [ngValue]="category.id">
+                                {{ category.name }}
+                            </option>
+                        </select>
+                    </div>
+                }
+
+                <!-- Title -->
+                <div class="md:col-span-2">
+                    <label class="mb-2 block font-medium">
+                        Product Title
+                    </label>
+                    <input
+                        [(ngModel)]="product.title"
+                        type="text"
+                        class="w-full rounded-lg border p-3">
+                </div>
+
+                <!-- Type -->
+                <div>
+                    <label class="mb-2 block font-medium">
+                        Type
+                    </label>
+
+                    <select
+                        [(ngModel)]="product.type"
+                        class="w-full rounded-lg border p-3">
+
+                        <option value="standard">Standard</option>
+                        <option value="badge">Badge</option>
+                        <option value="stamp">Stamp</option>
+                        <option value="flyer">Flyer</option>
+
+                    </select>
+                </div>
+
+                <!-- Price -->
+                <div>
+                    <label class="mb-2 block font-medium">
+                        Price
+                    </label>
+                    <input
+                        [(ngModel)]="product.price"
+                        type="number"
+                        class="w-full rounded-lg border p-3">
+                </div>
+
+                <!-- Minimum Quantity -->
+                <div>
+                    <label class="mb-2 block font-medium">
+                        Minimum Quantity
+                    </label>
+                    <input
+                        [(ngModel)]="product.minQuantity"
+                        type="number"
+                        class="w-full rounded-lg border p-3">
+                </div>
+
+                <!-- Description -->
+                <div class="md:col-span-2">
+                    <label class="mb-2 block font-medium">
+                        Description
+                    </label>
+
+                    <textarea
+                        [(ngModel)]="product.description"
+                        rows="4"
+                        class="w-full rounded-lg border p-3"></textarea>
+
+                </div>
+
+                <!-- Switches -->
+
+                <div class="flex items-center gap-6 md:col-span-2">
+                    <label class="flex items-center gap-2">
+                        <input
+                            type="checkbox"
+                            [(ngModel)]="product.showStock">
+                        Show Stock
+                    </label>
+
+                    <label class="flex items-center gap-2">
+                        <input
+                            type="checkbox"
+                            [(ngModel)]="product.isActive">
+                        Active
+                    </label>
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-end gap-3">
+                <button
+                    (click)="onCreateProduct()"
+                    [disabled]="isLoading"
+                    class="rounded-lg bg-[#FF8200] px-6 py-3 font-semibold text-white disabled:opacity-50">
+                    {{ isLoading ? 'Creating...' : 'Create Product' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

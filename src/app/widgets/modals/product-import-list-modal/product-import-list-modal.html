@@ -1,0 +1,135 @@
+<div class="fixed inset-0 z-60 flex items-center justify-center bg-black/40">
+    <div
+    class="w-full max-w-4xl rounded-3xl bg-white shadow-2xl">
+        <!-- Header -->
+        <div
+        class="flex items-center justify-between border-b p-6">
+            <h2
+            class="text-2xl font-semibold">
+                Upload Products
+            </h2>
+
+            <button
+            (click)="closeModal()"
+            class="text-3xl">
+                ×
+            </button>
+        </div>
+
+        <!-- Body -->
+        <div
+            class="max-h-[70vh] overflow-y-auto p-6">
+                <div class="mb-6">
+                    <label
+                        class="mb-2 block text-sm font-medium">
+                        Import Product File
+                    </label>
+                    <input
+                        type="file"
+                        accept=".txt"
+                        (change)="onFileSelected($event)"
+                        class="block w-full rounded-lg border p-2"/>
+                </div>
+                <div
+                    *ngIf="products.length"
+                    class="overflow-x-auto rounded-xl border">
+
+                    <table class="min-w-full">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="p-3 text-left">Code</th>
+                                <th class="p-3 text-left">Title</th>
+                                <th class="p-3 text-left">Company</th>
+                                <th class="p-3 text-left">Category</th>
+                                <th class="p-3 text-right">Price</th>
+                                <th class="p-3 text-right">Stock</th>
+                                <th class="p-3 text-center">Active</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @for(product of products; track product.code){
+
+                            <tr class="border-t">
+                                <td class="p-3">
+                                    {{product.code}}
+                                </td>
+                                <td class="p-3">
+                                    {{product.title}}
+                                </td>
+                                <td class="p-3">
+                                    <select
+                                        class="w-full rounded-lg border p-2"
+                                        [ngClass]="product.companyId !== 0 ? 'bg-[#0071795c]' : ''"
+                                        [(ngModel)]="product.companyId">
+                                        <option
+                                            [ngValue]="0">
+                                            Select Company
+                                        </option>
+                                        @for(company of companies; track company.id){
+                                            <option
+                                                [ngValue]="company.id">
+                                                {{company.name}}
+                                            </option>
+                                        }
+                                    </select>
+                                </td>
+                                <td class="p-3">
+                                    <select
+                                        class="w-full rounded-lg border p-2"
+                                        [ngClass]="product.categoryId !== 0 ? 'bg-[#0071795c]' : ''"
+                                        [(ngModel)]="product.categoryId">
+                                        <option
+                                            [ngValue]="0">
+                                            Select Category
+                                        </option>
+                                        @for(category of categories; track category.id){
+                                            <option
+                                                [ngValue]="category.id">
+                                                {{category.name}}
+                                            </option>
+                                        }
+                                    </select>
+                                </td>
+                                <td class="p-3 text-right">
+                                    {{product.price | number:'1.2-2'}}
+                                </td>
+                                <td class="p-3 text-right">
+                                    {{product.stock_count}}
+                                </td>
+                                <td class="p-3">
+                                    <div class="flex justify-center gap-4">
+                                        <label class="flex items-center gap-2">
+                                            <input
+                                                type="radio"
+                                                [name]="'active'+product.code"
+                                                [value]="true"
+                                                [(ngModel)]="product.is_active">
+                                            Yes
+                                        </label>
+
+                                        <label class="flex items-center gap-2">
+                                            <input
+                                                type="radio"
+                                                [name]="'active'+product.code"
+                                                [value]="false"
+                                                [(ngModel)]="product.is_active">
+                                            No
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+                <div
+                    class="mt-6 flex justify-end gap-3">
+                    <button
+                        class="rounded-xl bg-orange-500 px-6 py-2 text-white disabled:cursor-not-allowed disabled:bg-gray-300"
+                        [disabled]="!canSave || isLoading"
+                        (click)="onSaveProcessProduct()">
+                        Save Products
+                    </button>
+                </div>
+        </div>
+</div>

@@ -1,0 +1,223 @@
+<div class="min-h-screen bg-gray-50 p-6 space-y-8 text-[#231F20]">
+  <!-- ==========================================
+       SECTION 1: Primary Metrics (KPIs)
+       ========================================== -->
+  <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    
+    <!-- Blitz Summary KPI -->
+    <div class="rounded-2xl bg-white p-5 shadow-sm border border-gray-100 flex justify-between items-start">
+      <div>
+        <p class="text-sm font-medium text-[#75777B]">Active Blitz Summary</p>
+        <h3 class="mt-2 text-2xl font-bold text-[#231F20]">Week 28 Issue</h3>
+        <p class="mt-1 text-xs text-[#007179] font-semibold">Published 3 days ago</p>
+      </div>
+      <span class="px-2 py-1 text-xs font-semibold rounded-full bg-[#FF8200]/10 text-[#FF8200]">Bi-weekly</span>
+    </div>
+
+    
+
+    <!-- Total Pharmacies & Users KPI -->
+    <div class="rounded-2xl bg-white p-5 shadow-sm border border-gray-100 flex justify-between items-start">
+      <div>
+        <p class="text-sm font-medium text-[#75777B]">Pharmacies / Users</p>
+        <h3 class="mt-2 text-3xl font-bold text-[#231F20]">38 <span class="text-xl font-normal text-[#75777B]">/ 142</span></h3>
+        <p class="mt-1 text-xs text-[#75777B]">Across 4 regions</p>
+      </div>
+      <span class="p-2 rounded-lg bg-gray-100 text-[#75777B]">👥</span>
+    </div>
+
+    <!-- Active Documents KPI -->
+    <div class="rounded-2xl bg-white p-5 shadow-sm border border-gray-100 flex justify-between items-start">
+      <div>
+        <p class="text-sm font-medium text-[#75777B]">Active Documents</p>
+        @if (isLoadingTotalDoc) {
+          <div class="mt-2 h-9 w-16 bg-gray-200 animate-pulse rounded"></div>
+        } @else {
+          <h3 class="mt-2 text-3xl font-bold text-[#231F20]">{{ totalDoc }}</h3>
+        }
+        <p class="mt-1 text-xs text-emerald-600 font-semibold">Available for download</p>
+      </div>
+      <span class="p-2 rounded-lg bg-[#007179]/10 text-[#007179]">🛒</span>
+    </div>
+
+    <!-- Product Catalog Status -->
+    <div class="rounded-2xl bg-white p-5 shadow-sm border border-gray-100 flex justify-between items-start">
+      <div>
+        <p class="text-sm font-medium text-[#75777B]">Active Products</p>
+        @if (isLoadingTotalProd) {
+          <div class="mt-2 h-9 w-16 bg-gray-200 animate-pulse rounded"></div>
+        } @else {
+          <h3 class="mt-2 text-3xl font-bold text-[#231F20]">{{ totalProd }}</h3>
+        }
+        <p class="mt-1 text-xs text-[#007179]">Available for order</p>
+      </div>
+      <span class="p-2 rounded-lg bg-[#007179]/10 text-[#007179]">📦</span>
+    </div>
+
+  </section>
+
+
+  <!-- ==========================================
+       SECTION 2: Dynamic Feed & High Priority Items
+       ========================================== -->
+  <section class="grid gap-6 lg:grid-cols-3">
+    
+    <!-- High Priority: Blitz Buttons & Latest Summaries (Takes 2 Columns) -->
+    <div class="lg:col-span-2 space-y-6">
+
+      <!--### Blitz Button Focus Block -->
+      <div class="rounded-2xl bg-white p-6 shadow-sm border border-gray-100 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-2 h-full bg-[#FF8200]"></div>
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-[#FF8200]">High Priority</span>
+            <h2 class="text-xl font-bold text-[#231F20]">Latest Blitz Summary</h2>
+          </div>
+        </div>
+        <!-- Loading State: Spinner -->
+        <div *ngIf="isLoadingBlitz" class="flex flex-col items-center justify-center py-8">
+          <div class="w-8 h-8 border-4 border-[#FF8200] border-t-transparent rounded-full animate-spin"></div>
+          <p class="text-xs text-[#75777B] mt-2 font-medium">Loading latest blitz...</p>
+        </div>
+
+
+          <!-- Data State: Display Blitz -->
+          <div *ngIf="!isLoadingBlitz && blitzItem.id" class="p-3 rounded-xl bg-gray-50 border border-gray-100 flex flex-col gap-3">
+            
+            <!-- Optional Blitz Image -->
+            <img 
+              *ngIf="blitzItem.main_image" 
+              [src]="blitzItem.main_image" 
+              [alt]="blitzItem.title"
+              class="w-full h-32 object-cover rounded-lg border border-gray-100" 
+            />
+
+            <div>
+              <span class="text-[10px] font-semibold uppercase text-[#FF8200] tracking-wider">Latest Article</span>
+              <h4 class="font-semibold text-sm text-[#231F20] mt-1 line-clamp-1">{{ blitzItem.title }}</h4>
+              
+              <p *ngIf="blitzItem.sub_title" class="text-xs text-[#75777B] mt-1 line-clamp-2">
+                {{ blitzItem.sub_title }}
+              </p>
+
+              <a 
+                [routerLink]="['/blitz-bulletin', blitzItem.id]" 
+                class="inline-block mt-3 text-xs font-medium text-[#FF8200] hover:underline cursor-pointer"
+              >
+                Read Article →
+              </a>
+            </div>
+          </div>
+         <!-- Empty State -->
+          <div *ngIf="!isLoadingBlitz && !blitzItem.id" class="p-4 rounded-xl bg-gray-50 border border-gray-100 text-center">
+            <p class="text-xs text-[#75777B]">No recent articles available.</p>
+          </div>
+      </div>
+
+      <!-- Recent Orders & Pharmacy Action Feed -->
+      <div class="rounded-2xl bg-white p-6 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold text-[#231F20]">Recent Pharmacy Orders</h3>
+          <a href="#" class="text-sm font-semibold text-[#007179] hover:underline">View All Orders →</a>
+        </div>
+
+        <div class="divide-y divide-gray-100">
+          <div class="py-3 flex items-center justify-between">
+            <div>
+              <p class="font-medium text-sm text-[#231F20]">Order #ORD-8821 — MediCare Pharmacy</p>
+              <p class="text-xs text-[#75777B]">12 items • Placed 10 mins ago</p>
+            </div>
+            <span class="px-3 py-1 text-xs font-medium rounded-full bg-amber-50 text-amber-700 border border-amber-200">Processing</span>
+          </div>
+
+          <div class="py-3 flex items-center justify-between">
+            <div>
+              <p class="font-medium text-sm text-[#231F20]">Order #ORD-8820 — HealthFirst TLC</p>
+              <p class="text-xs text-[#75777B]">4 items • Placed 2 hours ago</p>
+            </div>
+            <span class="px-3 py-1 text-xs font-medium rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">Approved</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Secondary Updates (Blogs & Company Documents) -->
+    <div class="space-y-6">
+
+      <!-- In-Depth Blogs Section -->
+        <div class="rounded-2xl bg-white p-6 shadow-sm border border-gray-100">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-bold text-[#231F20]">Deep-Dive Blogs</h3>
+          </div>
+
+          <div class="space-y-4">
+            <!-- Loading State: Spinner -->
+            <div *ngIf="isLoadingBlog" class="flex flex-col items-center justify-center py-8">
+              <div class="w-8 h-8 border-4 border-[#007179] border-t-transparent rounded-full animate-spin"></div>
+              <p class="text-xs text-[#75777B] mt-2 font-medium">Loading latest blog...</p>
+            </div>
+
+            <!-- Data State: Display Blog -->
+            <div *ngIf="!isLoadingBlog && blogItem.id" class="p-3 rounded-xl bg-gray-50 border border-gray-100 flex flex-col gap-3">
+              
+              <!-- Optional Blog Image -->
+              <img 
+                *ngIf="blogItem.main_image" 
+                [src]="blogItem.main_image" 
+                [alt]="blogItem.title"
+                class="w-full h-32 object-cover rounded-lg border border-gray-100" 
+              />
+
+              <div>
+                <span class="text-[10px] font-semibold uppercase text-[#007179] tracking-wider">Latest Article</span>
+                <h4 class="font-semibold text-sm text-[#231F20] mt-1 line-clamp-1">{{ blogItem.title }}</h4>
+                
+                <p *ngIf="blogItem.sub_title" class="text-xs text-[#75777B] mt-1 line-clamp-2">
+                  {{ blogItem.sub_title }}
+                </p>
+
+                <a 
+                  [routerLink]="['/blog-single', blogItem.id]" 
+                  class="inline-block mt-3 text-xs font-medium text-[#007179] hover:underline cursor-pointer"
+                >
+                  Read Article →
+                </a>
+              </div>
+            </div>
+
+            <!-- Empty State -->
+            <div *ngIf="!isLoadingBlog && !blogItem.id" class="p-4 rounded-xl bg-gray-50 border border-gray-100 text-center">
+              <p class="text-xs text-[#75777B]">No recent articles available.</p>
+            </div>
+          </div>
+        </div>
+
+   
+
+      <!-- Quick Shortcuts: Documents, Products & User Management -->
+      <div class="rounded-2xl bg-white p-6 shadow-sm border border-gray-100">
+        <h3 class="text-lg font-bold text-[#231F20] mb-4">Quick Links</h3>
+        <ul class="space-y-2">
+          <li>
+            <a href="#" class="flex items-center justify-between p-2.5 rounded-xl hover:bg-gray-50 text-sm font-medium text-[#231F20] transition">
+              <span class="flex items-center gap-2">📄 Company Documents</span>
+              <span class="text-[#75777B] text-xs">PDFs</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center justify-between p-2.5 rounded-xl hover:bg-gray-50 text-sm font-medium text-[#231F20] transition">
+              <span class="flex items-center gap-2">💊 Product Catalog</span>
+              <span class="text-[#75777B] text-xs">Order Setup</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center justify-between p-2.5 rounded-xl hover:bg-gray-50 text-sm font-medium text-[#231F20] transition">
+              <span class="flex items-center gap-2">🏥 Pharmacy & User Directory</span>
+              <span class="text-[#75777B] text-xs">142 Users</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>

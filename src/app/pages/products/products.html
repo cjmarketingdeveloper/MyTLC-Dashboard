@@ -1,0 +1,130 @@
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+
+            <h1 class="text-3xl font-bold text-[#231F20]">
+                Products
+            </h1>
+
+            <p class="mt-1 text-[#75777B]">
+                Manage products, companies and categories.
+            </p>
+
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+            <button
+                (click)="openCompaniesModal()"
+                class="rounded-xl border border-[#007179] px-5 py-3 font-medium text-[#007179] transition hover:bg-[#007179] hover:text-white">
+                Companies
+            </button>
+
+            <button
+                (click)="openCategoriesModal()"
+                class="rounded-xl border border-[#007179] px-5 py-3 font-medium text-[#007179] transition hover:bg-[#007179] hover:text-white">
+                Categories
+            </button>
+            <button
+                (click)="openImportProductModal()"
+                class="rounded-xl border border-[#007179] px-5 py-3 font-medium text-[#007179] transition hover:bg-[#007179] hover:text-white">
+                Import Products
+            </button>
+            <button
+                (click)="openCreateProductModal()"
+                class="rounded-xl bg-[#FF8200] px-6 py-3 font-semibold text-white transition hover:opacity-90">
+                Create Product
+            </button>
+        </div>
+    </div>
+
+    <!-- Products Table -->
+    <div class="overflow-hidden rounded-2xl bg-white shadow-sm">
+        <table class="min-w-full">
+            <thead class="border-b bg-gray-50">
+                <tr>
+                    <th class="px-6 py-4 text-left">Image</th>
+                    <th class="px-6 py-4 text-left">Product</th>
+                    <th class="px-6 py-4 text-left">Company</th>
+                    <th class="px-6 py-4 text-left">Min Qty</th>                    
+                    <th class="px-6 py-4 text-left">Price</th>
+                    <th class="px-6 py-4 text-left">Status</th>
+                    <th class="px-6 py-4 text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    *ngFor="let product of products"
+                    class="border-b border-gray-300 hover:bg-gray-50">
+
+                    <td class="px-6 py-4">
+                         <img
+                            *ngIf="product.imageUrl; else noImage"
+                            [src]="product.imageUrl"
+                            class="h-12 w-12 rounded-lg object-cover">
+                        <ng-template #noImage>
+                            <div
+                                class="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-100 text-xs text-gray-500">
+                                No Image
+                            </div>
+                        </ng-template>
+                    </td>
+                    <td class="px-6 py-4">
+                        {{product.title}}
+                    </td>
+                    <td class="px-6 py-4">
+                        {{product.companyName }} 
+                    </td>
+                    <td class="px-6 py-4">
+                        {{product.min_quantity}} 
+                    </td>
+                    <td class="px-6 py-4">
+                        {{ product.price ? (product.price | currency:'ZAR') : '-' }}
+                    </td>
+                    <td class="px-6 py-4">
+                         <span
+                            *ngIf="product.is_active"
+                            class="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
+                            Active
+                        </span>
+                        <span
+                            *ngIf="!product.is_active"
+                            class="rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700">
+                            Inactive
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-center">                        
+                        <a
+                            [routerLink]="['/product-single', product.id]"
+                            class="rounded-lg bg-[#FF8200] px-4 py-2 text-white">
+                            View
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- Companies -->
+<app-company-widget-modal
+    *ngIf="showCompaniesModal"
+    (close)="closeCompaniesModal()">
+</app-company-widget-modal>
+
+<!-- Categories -->
+<app-categories-widget-modal
+    *ngIf="showCategoriesModal"
+    (close)="closeCategoriesModal()">
+</app-categories-widget-modal>
+
+<!-- Import Products -->
+<app-product-import-list-modal
+    *ngIf="showImportProductModal"
+    (close)="closeImportProductModal()">
+</app-product-import-list-modal>
+
+<!-- Create Product -->
+<app-product-create-widget-modal
+    *ngIf="showCreateProductModal"
+    (close)="closeCreateProductModal()">
+</app-product-create-widget-modal>

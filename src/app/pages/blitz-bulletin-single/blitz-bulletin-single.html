@@ -1,0 +1,49 @@
+<div class="space-y-6">
+  <!-- Title + Slug -->
+  <div>
+    <label class="block text-sm font-medium">Title</label>
+    <input type="text" 
+           [(ngModel)]="blitz.title"
+           (ngModelChange)="updateSlug()"   
+           class="mt-1 block w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-[#007179] focus:ring-2 focus:ring-[#007179] transition-all" />
+
+    <label class="block text-sm font-medium mt-4">Slug (auto)</label>
+    <input type="text" [(ngModel)]="blitz.slug" readonly
+           class="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm" />
+    
+    <label class="block text-sm font-medium mt-4">Sub Title</label>
+    <textarea 
+        rows="5" 
+        [(ngModel)]="blitz.sub_title"  
+        class="mt-1 block w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-[#007179] focus:ring-2 focus:ring-[#007179] transition-all" >
+    </textarea>
+  </div>
+
+  <!-- Content + Sidebar -->
+  <div class="flex gap-6">
+    <!-- 70% Content -->
+    <div class="w-7/12">
+      <label class="block text-sm font-medium mb-2">Content</label>
+      <quill-editor [(ngModel)]="blitz.content" [modules]="editorModules"
+                    class="border rounded-md shadow-sm w-full"></quill-editor>
+    </div>
+
+    <!-- 30% Sidebar -->
+    <div class="w-5/12 space-y-4">
+      <div>
+        <label class="block text-sm font-medium">Main Featured Image</label>
+        <input type="file" (change)="onFileSelected($event, 'main')" />
+        <button (click)="uploadMainImg()" class="mt-2  rounded bg-[#FF8200] px-3 py-1  text-white">
+          Upload Main
+        </button>
+      </div>
+     
+    </div>
+  </div>
+
+  <!-- Save Button -->
+  <button (click)="updateSaveBlitz()"
+          class="rounded-xl bg-[#FF8200] px-6 py-3 font-semibold text-white transition hover:opacity-90">
+    Update Blitz
+  </button>
+</div>

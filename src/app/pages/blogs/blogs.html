@@ -1,0 +1,75 @@
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+            <h1 class="text-3xl font-bold text-[#231F20]">
+                Blogs
+            </h1>
+            <p class="mt-1 text-[#75777B]">
+                Manage blogs.
+            </p>
+        </div>
+
+        <div class="flex flex-wrap gap-3">            
+            <a
+                [routerLink]="['/blog-create']"
+                class="rounded-xl bg-[#FF8200] px-6 py-3 font-semibold text-white transition hover:opacity-90">
+                Create Blog
+            </a>
+        </div>
+    </div>
+
+     <!-- Blogs Table -->
+    <div class="overflow-hidden rounded-2xl bg-white shadow-sm">
+        <table class="min-w-full">
+            <thead class="border-b bg-gray-50">
+                <tr>
+                    <th class="px-6 py-4 text-left">Title</th>                    
+                    <th class="px-6 py-4 text-left">Status</th>                    
+                    <th class="px-6 py-4 text-left">Created</th>
+                    <th class="px-6 py-4 text-left">Likes</th>
+                    <th class="px-6 py-4 text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    *ngFor="let doc of blogs"
+                    class="border-b border-gray-300 hover:bg-gray-50">
+                    
+                    <!-- Title -->
+                    <td class="px-6 py-4 font-medium text-gray-900">
+                        {{ doc.title }}
+                    </td>
+
+                    <!-- Status Badge -->
+                    <td class="px-6 py-4">
+                        <span 
+                            [class]="doc.publish 
+                                ? 'bg-green-100 text-green-800' 
+                                : 'bg-yellow-100 text-yellow-800'"
+                            class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium">
+                            {{ doc.publish ? 'Published' : 'Draft' }}
+                        </span>
+                    </td>
+
+                    <!-- Created Date -->
+                    <td class="px-6 py-4 text-gray-500 text-sm">
+                        {{ doc.created_at | date:'mediumDate' }}
+                    </td>
+                    <!-- Likes  -->
+                    <td class="px-6 py-4 text-gray-600">
+                     
+                    </td>
+                    <!-- Actions -->
+                    <td class="px-6 py-4 text-center">                        
+                        <a
+                            [routerLink]="['/blog-single', doc.id]"
+                            class="rounded-lg bg-[#FF8200] px-4 py-2 text-white transition hover:opacity-90 inline-block">
+                            View
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

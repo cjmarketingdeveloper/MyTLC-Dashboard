@@ -1,0 +1,7 @@
+.special-list-scroll {
+    background: #fffbf4;
+    height: 250px;
+    padding: 10px;
+    overflow-y: scroll;
+    border-radius: 10px;
+}

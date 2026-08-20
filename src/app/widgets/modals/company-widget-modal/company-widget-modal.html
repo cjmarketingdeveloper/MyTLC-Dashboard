@@ -1,0 +1,65 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+
+    <div
+    class="w-full max-w-4xl rounded-3xl bg-white shadow-2xl">
+        <!-- Header -->
+        <div class="flex items-center justify-between border-b p-6">
+            <h2 class="text-2xl font-semibold text-gray-800">Companies</h2>
+            <button (click)="closeModal()" class="text-3xl font-light text-gray-400 hover:text-gray-600 transition-colors">
+            ×
+            </button>
+        </div>
+
+        <!-- Body -->
+        <div class="max-h-[70vh] overflow-y-auto p-6 space-y-6">
+
+            <!-- Add Company Form -->
+            <form (submit)="$event.preventDefault(); onCreateCompany()" class="flex gap-3">
+            <input
+                type="text"
+                [ngModel]="newCompanyName()"
+                (ngModelChange)="newCompanyName.set($event)"
+                name="companyName"
+                placeholder="Enter company name..."
+                class="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-[#007179] focus:ring-2 focus:ring-[#007179] transition-all"
+                required
+            />
+            <button
+                type="submit"
+                [disabled]="!newCompanyName().trim() || isLoading()"
+                class="rounded-xl bg-[#FF8200] px-5 py-2.5 text-sm font-medium text-white hover:bg-[#FF8200] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+                Add Company
+            </button>
+            </form>
+
+            <hr class="border-gray-100" />
+
+            <!-- Loading State -->
+            @if (isLoading()) {
+            <div class="py-8 text-center text-sm text-gray-500">Loading companies...</div>
+            } @else {
+            <!-- List of Companies -->
+            <div class="space-y-2">
+                @for (company of companies(); track company.id) {
+                <div class="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50/50 p-4 hover:bg-gray-50 transition-colors">
+                    <span class="font-medium text-gray-700">{{ company.name }}</span>
+                    <button
+                    (click)="onDeleteCompany(company.id!)"
+                    class="rounded-lg p-2 text-sm text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors"
+                    title="Delete company"
+                    >
+                    Delete
+                    </button>
+                </div>
+                } @empty {
+                <div class="py-8 text-center text-sm text-gray-400">
+                    No companies created yet.
+                </div>
+                }
+            </div>
+            }
+
+        </div>
+    </div>
+</div>
