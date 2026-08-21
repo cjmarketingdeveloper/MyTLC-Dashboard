@@ -21,15 +21,15 @@ export class DocumentService {
         formData.append('type', type);
         formData.append('size', size);
   
-        return this.http.post(`${environment.apiUrl}documents/upload/document-file/v1`, formData);
+        return this.http.post(`${environment.apiUrl}/documents/upload/document-file/v1`, formData);
     }
 
   getDocuments():Observable<Document[]>{
-      return this.http.get<Document[]>(`${environment.apiUrl}documents/list/v1`);
+      return this.http.get<Document[]>(`${environment.apiUrl}/documents/list/v1`);
   }
 
   getDocument(id: string): Observable<Document>{
-          return this.http.get<Document>(`${environment.apiUrl}documents/find-single/v2/${id}`);
+          return this.http.get<Document>(`${environment.apiUrl}/documents/find-single/v2/${id}`);
   }
 
 }

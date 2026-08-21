@@ -13,18 +13,18 @@ export class ProductService {
   private http = inject(HttpClient);
   
   getProducts():Observable<Product[]>{
-    return this.http.get<Product[]>(`${environment.apiUrl}products/list/v1`);
+    return this.http.get<Product[]>(`${environment.apiUrl}/products/list/v1`);
   }
   getProduct(id: string): Observable<Product>{
-      return this.http.get<Product>(`${environment.apiUrl}products/find-single/v2/${id}`);
+      return this.http.get<Product>(`${environment.apiUrl}/products/find-single/v2/${id}`);
   }
 
   updateProductDetails(payload: any){
-    return this.http.put(`${environment.apiUrl}products/update-details/v1`, payload);
+    return this.http.put(`${environment.apiUrl}/products/update-details/v1`, payload);
   }
 
   createProduct(product: any) {
-    return this.http.post(`${environment.apiUrl}products/create/item/v1`, product);
+    return this.http.post(`${environment.apiUrl}/products/create/item/v1`, product);
   }
   deleteProduct(id: number) {
     return this.http.delete(`${environment.apiUrl}products/delete/item/${id}`);
@@ -36,26 +36,26 @@ export class ProductService {
       formData.append('oldurl', oldUrl);
       formData.append('productid', productId);
 
-      return this.http.put(`${environment.apiUrl}products/update/featured-image/v1`, formData);
+      return this.http.put(`${environment.apiUrl}/products/update/featured-image/v1`, formData);
   }
   /////////Company
   getCompanies(): Observable<Company[]> {
-    return this.http.get<Company[]>(`${environment.apiUrl}products/companies/v1`);
+    return this.http.get<Company[]>(`${environment.apiUrl}/products/companies/v1`);
   }
   createCompany(companyData: Partial<Company>): Observable<Company> {
-    return this.http.post<Company>(`${environment.apiUrl}products/create/company/v1`, companyData);
+    return this.http.post<Company>(`${environment.apiUrl}/products/create/company/v1`, companyData);
   }
 
   deleteCompany(id: number): Observable<void> {
-    return this.http.delete<void>(`${environment.apiUrl}products/company/${id}/v1`);
+    return this.http.delete<void>(`${environment.apiUrl}/products/company/${id}/v1`);
   }
   
   /////////Category
   getCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(`${environment.apiUrl}products/categories/v1`);
+    return this.http.get<Category[]>(`${environment.apiUrl}/products/categories/v1`);
   }
   createCategory(categoryData: Partial<Category>): Observable<Category> {
-    return this.http.post<Category>(`${environment.apiUrl}products/create/category/v1`, categoryData);
+    return this.http.post<Category>(`${environment.apiUrl}/products/create/category/v1`, categoryData);
   }
 
   deleteCategory(id: number): Observable<void> {
