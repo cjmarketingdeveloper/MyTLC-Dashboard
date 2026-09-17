@@ -42,3 +42,8 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# environment
+# Ignore specific environment files with credentials
+src/environments/environment.development.ts
+src/environments/environment.ts
