@@ -52,6 +52,7 @@ export class BlitzBulletinCreate {
         ['code-block'], // toggle code
         [{ 'header': [1, 2, 3, false] }],
         [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        ['table'],
         ['link', 'image']
       ]
   };
