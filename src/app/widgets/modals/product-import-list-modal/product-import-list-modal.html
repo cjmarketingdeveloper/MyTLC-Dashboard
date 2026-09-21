@@ -1,135 +1,244 @@
 <div class="fixed inset-0 z-60 flex items-center justify-center bg-black/40">
-    <div
-    class="w-full max-w-4xl rounded-3xl bg-white shadow-2xl">
-        <!-- Header -->
+    <div *ngIf="isInitializing">
+        <p>Loading category settings...</p>
+    </div>
+    @if (isLoading || bulkUploadOn) {
+        
         <div
-        class="flex items-center justify-between border-b p-6">
-            <h2
-            class="text-2xl font-semibold">
-                Upload Products
-            </h2>
+            class="w-full max-w-4xl rounded-3xl shadow-2xl flex
+            flex-col
+            bg-[#007179]
+            text-white
+            product-import_upload-scroll"
+            >
+            <!-- Header -->
+            <div class="shrink-0 border-b border-white/20 px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-semibold">
+                            Importing Products
+                        </h3>
+                        <p class="mt-1 text-sm text-white/80">
+                            Please wait while the products are being saved.
+                        </p>
+                    </div>
+                    <div>
+                        <button
+                            (click)="closeModal()"
+                            class="text-3xl">
+                                ×
+                        </button>
+                    </div>
+                </div>
+                
+            </div>
 
-            <button
-            (click)="closeModal()"
-            class="text-3xl">
-                ×
-            </button>
+            <!-- Product status list -->
+            <div class="scroll-height flex-1 overflow-y-auto px-6 py-4">
+                @for (product of products; track product.code; let i = $index) {
+                    <div class="flex items-center justify-between border-b border-white/10 py-3">
+                        <div class="flex min-w-0 items-center gap-3">
+                            <span class="w-8 shrink-0 text-sm text-white/50">
+                                {{ i + 1 }}
+                            </span>
+                            <div class="min-w-0">
+                                <div class="truncate text-sm font-medium">
+                                    {{ product.title }}
+                                </div>
+                                <div class="text-xs text-white/60">
+                                    {{ product.code }}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Status -->
+                        <div class="ml-4 shrink-0">
+                            @switch (product.importStatus) {
+                                @case ('pending') {
+                                    <span class="text-sm text-white/60">
+                                        Pending
+                                    </span>
+                                }
+
+                                @case ('processing') {
+                                    <span class="flex items-center gap-2 text-sm">
+                                        <span class="h-3 w-3 animate-spin rounded-full border-2 border-white/30 border-t-white"></span>
+                                        Processing
+                                    </span>
+                                }
+                                @case ('complete') {
+                                    <span class="text-sm font-medium text-white">
+                                        ✓ Complete
+                                    </span>
+                                }
+
+                                @case ('failed') {
+
+                                    <span
+                                        class="text-sm font-medium text-red-200"
+                                        [title]="product.importError || ''">
+                                        ✕ Failed
+                                    </span>
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Footer -- >
+            <div class="shrink-0 border-t border-white/20 px-6 py-4">
+                <div class="flex justify-between text-sm">
+                    <span>
+                        {{ completedProducts }} / {{ products.length }} processed
+                    </span>
+
+                    <span>
+                        {{ importProgress }}%
+                    </span>
+                </div>
+
+                <div class="mt-2 h-2 overflow-hidden rounded-full bg-white/20">
+                    <div
+                        class="h-full rounded-full bg-white transition-all duration-300"
+                        [style.width.%]="importProgress">
+                    </div>
+                </div>
+            </div> 
+        -->
         </div>
-
-        <!-- Body -->
+    } @else {
         <div
-            class="max-h-[70vh] overflow-y-auto p-6">
-                <div class="mb-6">
-                    <label
-                        class="mb-2 block text-sm font-medium">
-                        Import Product File
-                    </label>
-                    <input
-                        type="file"
-                        accept=".txt"
-                        (change)="onFileSelected($event)"
-                        class="block w-full rounded-lg border p-2"/>
-                </div>
+            class="w-full max-w-4xl rounded-3xl bg-white shadow-2xl">
+                <!-- Header -->
                 <div
-                    *ngIf="products.length"
-                    class="overflow-x-auto rounded-xl border">
+                class="flex items-center justify-between border-b p-6">
+                    <h2
+                    class="text-2xl font-semibold">
+                        Upload Products
+                    </h2>
 
-                    <table class="min-w-full">
-                        <thead class="bg-gray-100">
-                            <tr>
-                                <th class="p-3 text-left">Code</th>
-                                <th class="p-3 text-left">Title</th>
-                                <th class="p-3 text-left">Company</th>
-                                <th class="p-3 text-left">Category</th>
-                                <th class="p-3 text-right">Price</th>
-                                <th class="p-3 text-right">Stock</th>
-                                <th class="p-3 text-center">Active</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        @for(product of products; track product.code){
-
-                            <tr class="border-t">
-                                <td class="p-3">
-                                    {{product.code}}
-                                </td>
-                                <td class="p-3">
-                                    {{product.title}}
-                                </td>
-                                <td class="p-3">
-                                    <select
-                                        class="w-full rounded-lg border p-2"
-                                        [ngClass]="product.companyId !== 0 ? 'bg-[#0071795c]' : ''"
-                                        [(ngModel)]="product.companyId">
-                                        <option
-                                            [ngValue]="0">
-                                            Select Company
-                                        </option>
-                                        @for(company of companies; track company.id){
-                                            <option
-                                                [ngValue]="company.id">
-                                                {{company.name}}
-                                            </option>
-                                        }
-                                    </select>
-                                </td>
-                                <td class="p-3">
-                                    <select
-                                        class="w-full rounded-lg border p-2"
-                                        [ngClass]="product.categoryId !== 0 ? 'bg-[#0071795c]' : ''"
-                                        [(ngModel)]="product.categoryId">
-                                        <option
-                                            [ngValue]="0">
-                                            Select Category
-                                        </option>
-                                        @for(category of categories; track category.id){
-                                            <option
-                                                [ngValue]="category.id">
-                                                {{category.name}}
-                                            </option>
-                                        }
-                                    </select>
-                                </td>
-                                <td class="p-3 text-right">
-                                    {{product.price | number:'1.2-2'}}
-                                </td>
-                                <td class="p-3 text-right">
-                                    {{product.stock_count}}
-                                </td>
-                                <td class="p-3">
-                                    <div class="flex justify-center gap-4">
-                                        <label class="flex items-center gap-2">
-                                            <input
-                                                type="radio"
-                                                [name]="'active'+product.code"
-                                                [value]="true"
-                                                [(ngModel)]="product.is_active">
-                                            Yes
-                                        </label>
-
-                                        <label class="flex items-center gap-2">
-                                            <input
-                                                type="radio"
-                                                [name]="'active'+product.code"
-                                                [value]="false"
-                                                [(ngModel)]="product.is_active">
-                                            No
-                                        </label>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                        </tbody>
-                    </table>
-                </div>
-                <div
-                    class="mt-6 flex justify-end gap-3">
                     <button
-                        class="rounded-xl bg-orange-500 px-6 py-2 text-white disabled:cursor-not-allowed disabled:bg-gray-300"
-                        [disabled]="!canSave || isLoading"
-                        (click)="onSaveProcessProduct()">
-                        Save Products
+                    (click)="closeModal()"
+                    class="text-3xl">
+                        ×
                     </button>
                 </div>
+
+                <!-- Body -->
+                <div
+                    class="max-h-[70vh] overflow-y-auto p-6">
+                        <div class="mb-4">
+                            <label for="productFile" class="form-label">
+                            Import Products
+                            </label>
+
+                            <input
+                            id="productFile"
+                            type="file"
+                            class="block w-full rounded-lg border p-2"
+                            accept=".txt,text/plain"
+                            (change)="onFileSelected($event)"
+                            >
+                        </div>
+
+                        @if (isLoading) {
+                            <div class="text-center py-4">
+                                <div class="spinner-border" role="status"></div>
+                                <div class="mt-2">
+                                    Reading products...
+                                </div>
+                            </div>
+                        }
+
+                        @if (errorMessage) {
+                            <div class="alert alert-danger">
+                            {{ errorMessage }}
+                            </div>
+                        }
+
+                        @if (!isLoading && products.length > 0) {
+
+                            <div class="mb-3">
+                            <strong>{{ products.length }}</strong>
+                                products imported
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table-auto divide-y divide-gray-200 product-import_table-view">
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Title</th>
+                                            <th>Company</th>
+                                            <th>Type</th>
+                                            <th>Price</th>
+                                            <th>Qty</th>
+                                            <th>Active</th>
+                                            <th>Variation</th>
+                                            <th>V Label</th>
+                                            <th>V Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    @for (product of products; track product.code) {
+                                        <tr>
+                                            <td>
+                                                {{ product.code }}
+                                            </td>
+                                            <td>
+                                                {{ product.title }}
+                                            </td>
+                                            <td>
+                                                {{ product.companyId }}
+                                            </td>
+                                            <td>
+                                                {{ product.type }}
+                                            </td>
+                                            <td>
+                                                R {{ product.price | number:'1.2-2' }}
+                                            </td>
+                                            <td>
+                                                {{ product.stock_count }}
+                                            </td>
+                                            <td>
+                                                <span class="rounded bg-yellow-50 px-2.5 py-0.5 text-xs font-medium text-yellow-700">
+                                                {{ product.is_active ? 'Active' : 'Inactive' }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                {{ product.variation || '-' }}
+                                            </td>
+                                            <td>
+                                                {{ product.variation_label || '-' }}
+                                            </td>
+                                            <td>
+                                                {{ product.variation_value || '-' }}
+                                            </td>
+                                        </tr>
+                                    }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+
+                        @if (!isLoading && products.length === 0 && !errorMessage) {
+                            <div class="text-muted text-center py-4">
+                            Select a TXT file to begin.
+                            </div>
+                        }
+
+                    
+                </div>
+            <div class="p-4 flex justify-end gap-3">
+                <button
+                    type="button"
+                    class="rounded-xl bg-orange-500 px-6 py-2 text-white disabled:cursor-not-allowed disabled:bg-gray-300"
+                    [disabled]="isLoading || !hasImportedProducts"
+                    (click)="onSaveProcessProduct()">
+                    Save Products
+                </button>
+            </div>
         </div>
+    } 
+
 </div>

@@ -1,3 +1,9 @@
+export type ProductImportStatus =
+  | 'pending'
+  | 'processing'
+  | 'complete'
+  | 'failed';
+  
 // Enums keep your values strictly typed
 export type ProductType = 'standard' | 'badge' | 'stamp' | 'flyer';
 export type ContactMethod = 'Email' | 'WhatsApp' | 'Call';
@@ -20,6 +26,10 @@ export interface Product {
   stock_count: number;
   show_stock: boolean;
   variation?: string;
+  variation_label?: string;
   variation_value?: string;
   is_active: boolean;
+
+  importStatus?: ProductImportStatus;
+  importError?: string;
 }

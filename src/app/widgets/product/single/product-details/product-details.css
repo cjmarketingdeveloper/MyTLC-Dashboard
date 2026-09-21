@@ -1,0 +1,9 @@
+.prod-details-title-selected {
+        font-size: 20px;
+    background-color: rgb(198 240 191 / 72%);
+    padding: 10px 20px;
+    margin-bottom: 17px;
+    display: inline;
+    border-radius: 10px;
+    color: #0b6312;
+}
